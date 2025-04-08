@@ -10,7 +10,7 @@ const TemperatureDisplay = () => {
       {temperature !== null ? (
         <p>Sıcaklık: <strong>{temperature}°C</strong></p>
       ) : (
-        <p>Veri yükleniyor...</p>
+        <p>Veri yükleniyor......</p>
       )}
     </div>
   );
