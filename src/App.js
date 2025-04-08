@@ -1,11 +1,12 @@
 import React from "react";
-import TemperatureDisplay from "./components/TemperatureDisplay";
+import Dashboard from "./components/Dashboard";
+
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <TemperatureDisplay />
+      <Dashboard />
     </div>
   );
 }
