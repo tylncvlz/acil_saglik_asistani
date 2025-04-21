@@ -1,31 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";  // useParams hook'unu ekledik
+import { ref, onValue } from "firebase/database";
+import database from "../firebase";
 import TemperatureDisplay from "./TemperatureDisplay";
 import "../App.css";
+import COLevel from "./UsecoDisplay";
+import EmergencyDisplay from "./EmergencyDisplay";
+import BPMDisplay from "./NabizDisplay"
+import NotificationPanel from "./NotificationPanel";
+import { useBPM } from "../hooks/useHeartRate";
+
+
+import { useEmergency } from "../hooks/useEmergency";
 
 function Dashboard() {
+  const bpm = useBPM();
+  const { patientId } = useParams();  // URL'den gelen patientId'yi alıyoruz
+  const [patientData, setPatientData] = useState(null);
+  const emergency = useEmergency();
+  useEffect(() => {
+    // Firebase'den veriyi almak için patientId'yi dinamik olarak kullanıyoruz
+    fetch(`https://acil-saglik-asistani-66abe-default-rtdb.firebaseio.com/patients/patients/${patientId}.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPatientData(data);
+      })
+      .catch((err) => {
+        console.error("Veri çekilemedi:", err);
+      });
+  }, [patientId]);  // patientId değiştiğinde yeniden veri çekiyoruz
+
   return (
     <div className="main-dashboard">
       {/* Sol Panel */}
       <div className="left-panel">
         <div className="patient-header">
-          <img src="https://via.placeholder.com/50" alt="avatar" />
-          <h3>Ali Yılmaz</h3>
+          
+          <h3>{patientData?.adiSoyadi || "Yükleniyor..."}</h3>
         </div>
 
         <div className="patient-info-box">
-          <p>Adı Soyadı : Ali Yılmaz</p>
-          <p>Yaş: 65</p>
-          <p>Cinsiyet: Erkek</p>
-          <p>Hasta Kimlik Numarası: 123456789</p>
-          <p>Telefon Numarası: 0555 123 45 67</p>
-          <p>Boyu: 170 cm</p>
-          <p>Kilosu: 75 kg</p>
-          <p>Kan Grubu: A+</p>
-          <p>Teşhis: KOAH</p>
-          <p>Alerjiler: Penisilin</p>
-          <p>Kullandığı İlaçlar: İlac-1, İlac-2</p>
-          <p>Hasta Yakını Adı: Ayşe Yılmaz</p>
-          <p>Hasta Yakını Telefonu: 0555 987 65 43</p>
+          <p>Adı Soyadı: {patientData?.adiSoyadi}</p>
+          <p>Yaş: {patientData?.yas}</p>
+          <p>Cinsiyet: {patientData?.cinsiyet}</p>
+          <p>Hasta Kimlik Numarası: {patientData?.kimlikNo}</p>
+          <p>Telefon Numarası: {patientData?.telefon}</p>
+          <p>Boyu: {patientData?.boy} cm</p>
+          <p>Kilosu: {patientData?.kilo} kg</p>
+          {/* Eksik veriler varsa onlar da eklenebilir */}
         </div>
 
         <div className="patient-notes">
@@ -41,29 +63,25 @@ function Dashboard() {
       <div className="right-panel">
         <div className="sensor-grid">
           <div className="sensor-card">
-            <h4>❤️ Nabız</h4>
-            <p>Veri bekleniyor...</p>
+            <BPMDisplay />
           </div>
           <div className="sensor-card">
-            <h4>💨 Oksijen</h4>
-            <p>Veri bekleniyor...</p>
+            <COLevel />
           </div>
           <div className="sensor-card">
             <TemperatureDisplay />
           </div>
-          <div className="sensor-card alert-box">
-            <h4>🚨 Acil Durum</h4>
-            <p>Butona basıldı mı?</p>
-          </div>
+          <div className="sensor-card">
+  
+          <EmergencyDisplay />
+  </div>
         </div>
 
         <div className="notifications-panel">
-          <h4>🔔 Bildirimler</h4>
-          <div className="notification-card">
-            <strong>Nabız</strong>
-            <p>Hastanın nabzı eşik değerin üstüne çıktı.</p>
-            <span className="notif-time">12:34 PM</span>
-          </div>
+        <NotificationPanel bpm={bpm} />
+
+          
+          
         </div>
       </div>
     </div>

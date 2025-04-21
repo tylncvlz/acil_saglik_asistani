@@ -5,12 +5,12 @@ const TemperatureDisplay = () => {
   const temperature = useTemperature();
 
   return (
-    <div className="temperature-container">
-      <h1>ESP32 Sıcaklık Takibi</h1>
+    <div className="sensor-content">
+      <h3>🌡️ Sıcaklık</h3>
       {temperature !== null ? (
-        <p>Sıcaklık: <strong>{temperature}°C</strong></p>
+        <p className="sensor-value">{temperature} °C</p>
       ) : (
-        <p>Veri yükleniyor......</p>
+        <p className="sensor-loading">Veri yükleniyor...</p>
       )}
     </div>
   );

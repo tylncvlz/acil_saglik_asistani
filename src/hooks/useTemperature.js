@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_URL = "http://10.34.214.129/data"; // ESP32'nin API adresi
+const API_URL = "http://192.168.137.2/data"; // ESP32'nin API adresi
 
 export function useTemperature() {
   const [temperature, setTemperature] = useState(null);

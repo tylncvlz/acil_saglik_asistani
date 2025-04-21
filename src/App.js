@@ -1,13 +1,17 @@
+// App.js
 import React from "react";
-import Dashboard from "./components/Dashboard";
-
-import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";  // Login sayfası
+import Dashboard from "./components/Dashboard";  // Dashboard sayfası
 
 function App() {
   return (
-    <div className="App">
-      <Dashboard />
-    </div>
+    <Router>
+    <Routes>
+      <Route path="/" element={<Login />} />  {/* Login sayfası */}
+      <Route path="/dashboard/:patientId" element={<Dashboard />} />  {/* Hasta ID'ye göre Dashboard */}
+    </Routes>
+  </Router>
   );
 }
 
